@@ -1,0 +1,37 @@
+{% extends 'blog_layout.html' %}
+{% load bootstrap3 %}
+
+{% block page_title %}새글 작성 {% endblock %}
+
+{% block content %}
+        <form method="POST" action="" class="form-horizontal">
+            {% csrf_token %}
+            <br><div class="form-group form-group-sm">
+                <p>
+                    <select name="category">
+                    {% for category in categories %}
+                    <option value="{{ category.pk }}">{{ category.cat }}</option>
+                    {% endfor %}
+                    </select>
+                </p>
+
+                <p>
+                <label for="id_title">제목</label>
+                <input type="text" name="title" id="id_title">
+                </p>
+
+                <p>
+                    <textarea rows="4" cols="40" name="content"></textarea>
+                </p>
+
+                <p>
+                {% bootstrap_button "저장" button_type="submit" button_class="btn-primary" %}
+                <a href="{% url 'list_posts' %}">
+                    <button type="button" class="btn btn-primary">취소</button>
+                </a>
+                </p>
+            </div>
+
+        </form>
+
+        {% endblock %}

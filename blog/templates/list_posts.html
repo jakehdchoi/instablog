@@ -1,0 +1,32 @@
+{% extends 'blog_layout.html' %}
+{% load bootstrap3 %}
+
+{% block page_title %}글 목록 {% endblock %}
+
+{% block content %}
+    {% for post in posts %}
+    <div class="post_container">
+        <h3><a href="{% url 'view_post' pk=post.pk %}">{{ post.title }}</a></h3>
+
+        <div class="post_content">
+            <p>{{ post.content }}</p>
+
+        </div>
+
+        <div>
+            <p>카테고리 : {{ post.category.cat }}</p>
+            <p>작성일시 : {{ post.created_at | date:"Y-m-d" }}</p>
+        </div>
+    </div>
+    {% empty %}
+        <p>글이 전혀 없습니다.</p>
+    {% endfor %}
+
+    <br><a href="{% url 'create_post' %}">
+        <button type="button" class="btn btn-primary">새글 작성</button>
+    </a><br>
+
+
+    {% bootstrap_pagination posts %}
+
+{% endblock %}
