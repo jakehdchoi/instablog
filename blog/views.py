@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from .models import Post, Comment, Category, Tag
@@ -12,7 +12,7 @@ def hello_with_template(request):
     return render(request, 'hello.html')
 
 def list_posts(request):
-    per_page = 5
+    per_page = 4
     current_page = int(request.GET.get('page', 1)) # page가 있으면 값을 가져오고 없으면 1을 가져온다.
 
     all_posts = Post.objects.select_related().prefetch_related().all()
@@ -24,6 +24,7 @@ def list_posts(request):
         pg = pagi.page(1)
     except EmptyPage:
         pg = []
+        raise Http404 # 404 에러 페이지로 이동
 
     return render(request, 'list_posts.html', {
         'posts': pg,
@@ -53,19 +54,23 @@ def view_post(request, pk):
 
 def create_post(request):
     categories = Category.objects.all()
-    
+
     if request.method == 'GET':
         pass
     elif request.method == 'POST':
         new_post = Post()
-        new_post.title = request.POST.get('title') # 사용자가 잘못된 입력값을 주는 경우 예외처리를 좀 생각해 보자. 서버에서 검증하는 방법.
+        new_post.title = request.POST.get('title')
         new_post.content = request.POST.get('content')
 
         category_pk = request.POST.get('category')
         category = get_object_or_404(Category, pk=category_pk)
         new_post.category = category
-        new_post.save()
-        return redirect('view_post', pk=new_post.pk)
+
+        if new_post.title == "": # 제목을 입력하지 않으면 404 페이지가 뜨도록 했다.. 그러면 뒤로 돌아 가겠지..
+            raise Http404("제목을 입력하세요!")
+        else:
+            new_post.save()
+            return redirect('view_post', pk=new_post.pk)
 
     return render(request, 'create_post.html', {
         'categories': categories,

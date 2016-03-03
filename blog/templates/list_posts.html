@@ -9,24 +9,29 @@
         <h3><a href="{% url 'view_post' pk=post.pk %}">{{ post.title }}</a></h3>
 
         <div class="post_content">
-            <p>{{ post.content }}</p>
+            <p>{{ post.content | truncatewords:"10" }}</p>
 
         </div>
 
         <div>
             <p>카테고리 : {{ post.category.cat }}</p>
             <p>작성일시 : {{ post.created_at | date:"Y-m-d" }}</p>
-        </div>
+        </div><br>
     </div>
     {% empty %}
         <p>글이 전혀 없습니다.</p>
     {% endfor %}
 
-    <br><a href="{% url 'create_post' %}">
-        <button type="button" class="btn btn-primary">새글 작성</button>
-    </a><br>
+    <br>
+    <a href="{% url 'create_post' %}">
+        <button type="button" class="btn btn-info btn-sm">새글 작성</button>
+    </a>
+    <a href="{% url 'list_posts' %}">
+        <button type="button" class="btn btn-info btn-sm">페이지 새로고침</button>
+    </a>
 
 
+    <br>
     {% bootstrap_pagination posts %}
 
 {% endblock %}
