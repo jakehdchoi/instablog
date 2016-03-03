@@ -15,15 +15,15 @@
                 </select>
             </p>
 
-            <div><p>
-            글 제목
-            <input type="text" name="title" value="{{ post.title }}" id="id_title"><br>
-            </p></div>
+            <div>
+            <p>제목:</p>
+            <input type="text" size="40" name="title" value="{{ post.title }}" id="id_title"><br>
+            </div><br>
 
-            <div><p>
-            글 내용
-            <textarea rows="4" cols="40" name="content">{{ post.content }}</textarea>
-            </p></div>
+            <div>
+            <p>내용:</p>
+            <textarea rows="15" cols="42" name="content">{{ post.content }}</textarea>
+            </div><br>
 
             <p>
             {% bootstrap_button "저장" button_type="submit" button_class="btn-primary" %}

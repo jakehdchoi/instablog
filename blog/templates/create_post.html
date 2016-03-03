@@ -7,7 +7,7 @@
         <form method="POST" action="" class="form-horizontal">
             {% csrf_token %}
             <br><div class="form-group form-group-sm">
-                <p>
+                <p>카테고리:
                     <select name="category">
                     {% for category in categories %}
                     <option value="{{ category.pk }}">{{ category.cat }}</option>
@@ -15,14 +15,15 @@
                     </select>
                 </p>
 
-                <p>
-                <label for="id_title">제목</label>
-                <input type="text" name="title" id="id_title">
-                </p>
+                <div>
+                <p>제목:</p>
+                <input type="text" size="40" name="title" value="{{ post.title }}" id="id_title"><br>
+                </div><br>
 
-                <p>
-                    <textarea rows="4" cols="40" name="content"></textarea>
-                </p>
+                <div>
+                <p>내용:</p>
+                <textarea rows="15" cols="42" name="content">{{ post.content }}</textarea>
+                </div><br>
 
                 <p>
                 {% bootstrap_button "저장" button_type="submit" button_class="btn-primary" %}

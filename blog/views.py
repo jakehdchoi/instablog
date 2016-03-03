@@ -39,8 +39,12 @@ def view_post(request, pk):
         new_comment = Comment()
         new_comment.content = request.POST.get('content')
         new_comment.post = the_post
-        new_comment.save()
-        return redirect('view_post', pk=the_post.pk)
+
+        if new_comment.content == "": # 내용이 없는 댓글은 달리지 않는다. 하지만 스페이스를 입력하면 댓글이 달림..
+            pass
+        else:
+            new_comment.save()
+            return redirect('view_post', pk=the_post.pk)
 
     return render(request, 'view_post.html', {
         'post': the_post,
@@ -49,6 +53,7 @@ def view_post(request, pk):
 
 def create_post(request):
     categories = Category.objects.all()
+    
     if request.method == 'GET':
         pass
     elif request.method == 'POST':

@@ -4,11 +4,13 @@
 {% block page_title %}글 삭제 {% endblock %}
 
 {% block content %}
-    <h3>{{ post.title }} 삭제 확인 </h3>
+<div>
+  <h3><a href="{% url 'view_post' pk=post.pk %}">{{ post.title }}</a><font size=5> :삭제 확인</font>
+</div>
     <form method="POST" action="" >
         {% csrf_token %}
         <p>
-            이 글을 삭제하시겠습니까?
+            <font size=4>이 글을 삭제하시겠습니까?</font>
         </p>
 
         {% bootstrap_button "삭제" button_type="submit" button_class="btn-primary" %}

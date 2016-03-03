@@ -3,7 +3,7 @@
 
 {% block page_title %}댓글 삭제 {% endblock %}
 {% block content %}
-    <h3>{{ comment.content }} : 삭제 확인 </h3>
+    <h3>{{ comment.content }} <font size=4>:삭제 확인</font></h3>
     <form method="POST" action="" >
         {% csrf_token %}
         <p>

@@ -29,7 +29,10 @@ class Comment(models.Model):
     updated_at = models.DateTimeField(auto_now = True)
 
     def __str__(self):
-        return '{} - {}.{} : {}'.format(self.pk, self.post.pk, self.post.title, self.content)
+        return '({}) - {}.{} : {}'.format(self.pk, self.post.pk, self.post.title, self.content)
 
 class Tag(models.Model):
      name = models.CharField(max_length = 40)
+
+     def __str__(self):
+        return '({}) {}'.format(self.pk, self.name)
