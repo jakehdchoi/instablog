@@ -1,9 +1,21 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, Http404
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth.decorators import login_required
 
 from .models import Post, Comment, Category, Tag
+from .forms import PostForm, PostEditForm
 
+'''
+request.method == 'GET': 가져오는 것
+디비를 수정하지 않는 페이지에 대해서 사용하며 url 주소로 접속 가능한 페이지들에 적용
+가령, 메뉴를 통해 여러 단계 들어간 페이지 (디비를 건드리지 않는다면 이 방법이 좋음)
+
+request.method == 'POST': 수행하는 것
+디비를 수정하는 페이지에 대해서 사용하며 url 주소만으로 접속할 필요가 없는 페이지들
+가령, 글을 작성하거나 지우는 기능을 포함하는 페이지들
+'''
 
 def hello(request):
     return HttpResponse('hello world')
@@ -12,7 +24,7 @@ def hello_with_template(request):
     return render(request, 'hello.html')
 
 def list_posts(request):
-    per_page = 4
+    per_page = 3
     current_page = int(request.GET.get('page', 1)) # page가 있으면 값을 가져오고 없으면 1을 가져온다.
 
     all_posts = Post.objects.select_related().prefetch_related().all()
@@ -24,7 +36,7 @@ def list_posts(request):
         pg = pagi.page(1)
     except EmptyPage:
         pg = []
-        raise Http404 # 404 에러 페이지로 이동
+        raise Http404("해당 페이지가 존재하지 않습니다.") # 404 에러 페이지로 이동
 
     return render(request, 'list_posts.html', {
         'posts': pg,
@@ -52,30 +64,25 @@ def view_post(request, pk):
         'comment' : the_comment,
     })
 
+@login_required
 def create_post(request):
     categories = Category.objects.all()
 
     if request.method == 'GET':
-        pass
+        form = PostEditForm()
     elif request.method == 'POST':
-        new_post = Post()
-        new_post.title = request.POST.get('title')
-        new_post.content = request.POST.get('content')
-
-        category_pk = request.POST.get('category')
-        category = get_object_or_404(Category, pk=category_pk)
-        new_post.category = category
-
-        if new_post.title == "": # 제목을 입력하지 않으면 404 페이지가 뜨도록 했다.. 그러면 뒤로 돌아 가겠지..
-            raise Http404("제목을 입력하세요!")
-        else:
+        form = PostEditForm(request.POST)
+        if form.is_valid():
+            new_post = form.save(commit = False) # 커밋을 하지 않은 상태여야지 유저정보를 같이 저장할 수 있다.
+            new_post.user = request.user
             new_post.save()
             return redirect('view_post', pk=new_post.pk)
 
     return render(request, 'create_post.html', {
-        'categories': categories,
+        'form': form,
     })
 
+@login_required
 def edit_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
     categories = Category.objects.all()
@@ -97,23 +104,30 @@ def edit_post(request, pk):
         'categories': categories,
     })
 
+@login_required
 def delete_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
 
-    if request.method == 'GET':
-        pass
-    elif request.method == 'POST':
-        post.delete()
-        return redirect('list_posts')
+    if post.user != request.user:
+        raise PermissionDenied
+    else:
+        if request.method == 'GET':
+            pass
+        elif request.method == 'POST':
+            post.delete()
+            return redirect('list_posts')
 
     return render(request, 'delete_post.html', {
         'post': post,
     })
 
+@login_required
 def delete_comment(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
 
-    if request.method =='POST':
+    if request.method == 'GET':
+        pass
+    elif request.method == 'POST':
         comment.delete()
         return redirect('view_post', pk=comment.post.pk)
 

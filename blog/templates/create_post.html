@@ -4,8 +4,10 @@
 {% block page_title %}새글 작성 {% endblock %}
 
 {% block content %}
-        <form method="POST" action="" class="form-horizontal">
+        <form method="POST" action="" class="form-horizontal"><br>
             {% csrf_token %}
+
+<!--
             <br><div class="form-group form-group-sm">
                 <p>카테고리:
                     <select name="category">
@@ -14,7 +16,6 @@
                     {% endfor %}
                     </select>
                 </p>
-
                 <div>
                 <p>제목:</p>
                 <input type="text" size="40" name="title" value="{{ post.title }}" id="id_title"><br>
@@ -24,6 +25,11 @@
                 <p>내용:</p>
                 <textarea rows="15" cols="42" name="content">{{ post.content }}</textarea>
                 </div><br>
+-->
+
+
+                {{ form.as_p }}
+
 
                 <p>
                 {% bootstrap_button "저장" button_type="submit" button_class="btn-primary" %}

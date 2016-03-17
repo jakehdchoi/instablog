@@ -16,6 +16,7 @@
           <a href="{% url 'list_posts' %}">
               <button type="button" class="btn btn-info btn-xs">전체 글 목록</button>
           </a>
+          <hr width="50%" align="left" />
       </div>
     </h3>
 
@@ -27,6 +28,8 @@
         <p>카테고리 : {{ post.category.cat }}</p>
         <p>작성일시 : {{ post.created_at }}</p>
     </div>
+    <hr width="50%" align="left" />
+
 </div>
 
 {% with comments=post.comment_set.all %}

@@ -4,12 +4,14 @@
 {% block page_title %}글 목록 {% endblock %}
 
 {% block content %}
+<font color="grey" size="7">InstaBlog Test Page</font>
     {% for post in posts %}
     <div class="post_container">
         <h3><a href="{% url 'view_post' pk=post.pk %}">{{ post.title }}</a></h3>
+        <hr width="50%" align="left" />
 
         <div class="post_content">
-            <p>{{ post.content | truncatewords:"10" }}</p>
+            <p>{{ post.content | truncatewords:"50" }}</p>
 
         </div>
 

@@ -1,0 +1,25 @@
+{% load bootstrap3 %}
+{% if form.errors %}
+<p>아이디 또는 비밀번호가 일치하지 않습니다. </p>
+{% endif %}
+
+{% if request.user.is_authenticated %}
+<p>{{ request.user }}님은 이미 로그인 되어 있습니다. </p>
+<p><a href="{% url 'logout_url' %}">로그아웃 하시겠습니까?</a></p>
+{% endif %}
+
+<form method="POST" action="{% url 'login_url' %}">
+{% csrf_token %}
+<input type="hidden" name="next" value="{{ next }}" />
+
+<p>
+  {{ form.username.label_tag }}
+  {{ form.username }}
+</p>
+
+<p>
+  {{ form.password.label_tag }}
+  {{ form.password }}
+</p>
+
+{% bootstrap_button "login" button_type="submit" button_class="btn-primary" %}

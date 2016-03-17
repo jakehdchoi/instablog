@@ -1,5 +1,7 @@
 from django.conf.urls import url
 from django.contrib import admin
+from django.contrib.auth.views import login, logout
+from django.conf import settings
 
 from blog import views as blog_views
 
@@ -16,4 +18,16 @@ urlpatterns = [
 
     url(r'^hello/$', blog_views.hello_with_template),
     url(r'^admin/', admin.site.urls),
+
+    # url(r'^login/$', login),
+    url(r'^{}$'.format(settings.LOGIN_URL[1:]),
+        login,
+        {'template_name': 'login.html'},
+        name = 'login_url'
+    ),
+    
+    url(r'^{}$'.format(settings.LOGOUT_URL[1:]),
+        logout,
+        {'next_page': settings.LOGIN_URL},
+        name = 'logout_url'),
 ]
