@@ -7,15 +7,6 @@ from django.contrib.auth.decorators import login_required
 from .models import Post, Comment, Category, Tag
 from .forms import PostForm, PostEditForm
 
-'''
-request.method == 'GET': 가져오는 것
-디비를 수정하지 않는 페이지에 대해서 사용하며 url 주소로 접속 가능한 페이지들에 적용
-가령, 메뉴를 통해 여러 단계 들어간 페이지 (디비를 건드리지 않는다면 이 방법이 좋음)
-
-request.method == 'POST': 수행하는 것
-디비를 수정하는 페이지에 대해서 사용하며 url 주소만으로 접속할 필요가 없는 페이지들
-가령, 글을 작성하거나 지우는 기능을 포함하는 페이지들
-'''
 
 def hello(request):
     return HttpResponse('hello world')
