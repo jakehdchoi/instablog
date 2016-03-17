@@ -108,14 +108,14 @@ def edit_post(request, pk):
 def delete_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
 
-    if post.user != request.user:
-        raise PermissionDenied
-    else:
+    if post.user == request.user:
         if request.method == 'GET':
             pass
         elif request.method == 'POST':
             post.delete()
             return redirect('list_posts')
+    else:
+        raise PermissionDenied
 
     return render(request, 'delete_post.html', {
         'post': post,
@@ -125,11 +125,14 @@ def delete_post(request, pk):
 def delete_comment(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
 
-    if request.method == 'GET':
-        pass
-    elif request.method == 'POST':
-        comment.delete()
-        return redirect('view_post', pk=comment.post.pk)
+    if post.user == request.user:
+        if request.method == 'GET':
+            pass
+        elif request.method == 'POST':
+            comment.delete()
+            return redirect('view_post', pk=comment.post.pk)
+    else:
+        raise PermissionDenied
 
     return render(request, 'delete_comment.html',{
         'comment':comment,
